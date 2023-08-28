@@ -10,16 +10,30 @@ function QuestionForm(props) {
     correctIndex: 0,
   });
 
+  function handleSubmit(event) {
+    const newQuestion = {
+      prompt: formData.prompt,
+      answers: [formData.answer1, formData.answer2, formData.answer3, formData.answer4],
+      correctIndex: formData.correctIndex
+    }
+
+    event.preventDefault();
+    fetch("http://127.0.0.1:4000/questions", {
+      method: "POST",
+      headers: {"content-type": "application/json"},
+      body: JSON.stringify(newQuestion)
+    })
+    .then(response => response.json())
+    .then(data => {
+      props.newQuestion(data)
+    })
+  }
+
   function handleChange(event) {
     setFormData({
       ...formData,
       [event.target.name]: event.target.value,
     });
-  }
-
-  function handleSubmit(event) {
-    event.preventDefault();
-    console.log(formData);
   }
 
   return (
